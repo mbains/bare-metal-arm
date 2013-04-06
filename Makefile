@@ -14,7 +14,7 @@ CFLAGS = -ffunction-sections -fdata-sections -Wall -Wa,-adhlns="$@.lst" \
 		 $(DEBUG_OPTS) $(OPTS) -I .
 
 LIBOBJS = _startup.o syscalls.o uart.o delay.o accel.o touch.o usb.o \
-		ring.o tests.o
+		ring.o tests.o gpio.o
 
 INCLUDES = freedom.h common.h
 
@@ -24,7 +24,7 @@ libbare.a: $(LIBOBJS)
 	$(AR) -rv libbare.a $(LIBOBJS)
 	
 clean:
-	-rm *.o *.lst *.out libbare.a *.srec *.dump
+	-rm -f *.o *.lst *.out libbare.a *.srec *.dump
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $<

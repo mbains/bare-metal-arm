@@ -4,6 +4,10 @@
 //
 
 // Memory locations defined by the linker
+#ifndef BAREMETAL_COMMON_H
+#define BAREMETAL_COMMON_H
+
+
 extern uint32_t __heap_start[];
 extern uint32_t __StackTop[];
 extern uint32_t __data_start__[], __data_end__[];
@@ -67,3 +71,5 @@ void buf_put_byte(RingBuffer *buf, uint8_t val);
 
 // tests.c
 void tests(void);
+
+#endif
