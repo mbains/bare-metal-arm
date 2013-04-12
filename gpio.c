@@ -8,6 +8,7 @@
 
 
 #include "gpio.h"
+#include "common.h"
 #include <stddef.h>
 
 
@@ -53,7 +54,7 @@ void gpio_input_enable(FRDM_GPIO_PORT_T port, uint8_t pin, uint8_t irqc)
     
     //enable interrupts on pin if possible
     if(irq != -1) {
-        *pcr_ptr |= PORT_PCR_IRQC(irqc);
+        *pcr_ptr = CMN_SET_CLR_BITS(*pcr_ptr, PORT_PCR_IRQC(irqc), PORT_PCR_IRQC(0xF));//set irqc, clear others
         enable_irq(irq);
     }
     
@@ -67,12 +68,9 @@ inline uint32_t getPortD_IRQ_count(void) {
 void PORTD_IRQHandler() {
     totalPortD_irq+=1;
 
-    // TODO: For some reason, interrupt keeps firing until 
-    // it is disabled and re-enabled. 
-    PORTD_PCR0 &= ~PORT_PCR_IRQC(FRDM_IRQC_FALLING_EDGE);
-     delay(50);
-    PORTD_PCR0 |= PORT_PCR_IRQC(FRDM_IRQC_FALLING_EDGE);
-   
+    //set the interrupt status flag to complete IRQ handle
+    PORTD_PCR0 |= (1 << PORT_PCR_ISF_SHIFT);
+
 }
 inline uint32_t getPortA_IRQ_count(void) {
     return totalPortA_irq;
@@ -80,12 +78,8 @@ inline uint32_t getPortA_IRQ_count(void) {
 
 void PORTA_IRQHandler() {
     totalPortA_irq+=1;
-
-    // TODO: For some reason, interrupt keeps firing until 
-    // it is disabled and re-enabled. 
-    PORTA_PCR0 &= ~PORT_PCR_IRQC(FRDM_IRQC_FALLING_EDGE);
-     delay(50);
-    PORTA_PCR0 |= PORT_PCR_IRQC(FRDM_IRQC_FALLING_EDGE);
-   
+    
+    //set the interrupt status flag to complete IRQ handle
+    PORTA_PCR0 |= (1 << PORT_PCR_ISF_SHIFT);
 }
 

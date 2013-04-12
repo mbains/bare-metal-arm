@@ -7,6 +7,7 @@
 #ifndef BAREMETAL_COMMON_H
 #define BAREMETAL_COMMON_H
 
+#define CMN_SET_CLR_BITS(_r, _s, _c) ((_r & ~_c) | _s)
 
 extern uint32_t __heap_start[];
 extern uint32_t __StackTop[];
