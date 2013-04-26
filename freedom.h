@@ -8,6 +8,7 @@
 #include "MKL25Z4.h"                    // CPU definitions
 
 #define CORE_CLOCK          48000000    // Core clock speed
+#define BUS_CLOCK           24000000
 
 static inline void RGB_LED(int red, int green, int blue) {
     TPM2_C0V  = red;

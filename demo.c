@@ -8,6 +8,7 @@
 #include "freedom.h"
 #include "common.h"
 #include "gpio.h"
+#include "spi.h"
 
 extern char *_sbrk(int len);
 
@@ -27,7 +28,8 @@ int main(void)
     // Run tests
     tests();
     delay(500);
-    gpio_input_enable(FRDM_GPIO_PORT_D, 0, FRDM_IRQC_FALLING_EDGE);
+    spi_init(0,0,0);
+    //gpio_input_enable(FRDM_GPIO_PORT_D, 0, FRDM_IRQC_FALLING_EDGE);
     RGB_LED(0,100,0);                       // Green
 
     // Welcome banner
@@ -43,6 +45,11 @@ int main(void)
     for(;;) {
         iprintf("monitor> ");
         getchar();
+        
+        // XXX: Just test code below. 
+        spi_write_data( (0x12<<1));
+            
+
         iprintf("\r\n");
         iprintf("Inputs:  x=%5d   y=%5d   z=%5d ", accel_x(), accel_y(), accel_z());
         iprintf("touch=(%d,%d)\r\n", touch_data(9), touch_data(10));
