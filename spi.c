@@ -10,11 +10,12 @@ volatile static int dataIn;
 
 void spi_init(int cpol, int cphase, int rate) 
 {
-    //Use PTD for SPI0
-    PORTD_PCR0 = PORT_PCR_MUX(2);//cs
-    PORTD_PCR1 = PORT_PCR_MUX(2);//clk
-    PORTD_PCR2 = PORT_PCR_MUX(2);//mosi
-    PORTD_PCR3 = PORT_PCR_MUX(2);//miso
+    
+    SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK;
+    PORTC_PCR4 = PORT_PCR_MUX(2); //cs
+    PORTC_PCR5 = PORT_PCR_MUX(2); //clk 
+    PORTC_PCR6 = PORT_PCR_MUX(2); //mosi -- SDI
+    PORTC_PCR7 = PORT_PCR_MUX(2); //miso -- SDO
     
     SIM_SCGC4 |= SIM_SCGC4_SPI0_MASK; //point clock to SPI
     
@@ -35,6 +36,8 @@ void spi_init(int cpol, int cphase, int rate)
     */
     SPI0_BR &= ~SPI_BR_SPPR_MASK;
     SPI0_BR &= ~SPI_BR_SPR_MASK;
+    SPI0_BR |= SPI_BR_SPPR(4);
+    SPI0_BR |= SPI_BR_SPR(1);
             
     enable_irq(INT_SPI0);
 }
