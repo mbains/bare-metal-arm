@@ -46,9 +46,6 @@ int main(void)
         iprintf("monitor> ");
         getchar();
         
-        // XXX: Just test code below. 
-        spi_write_data( (0x12<<1));
-            
 
         iprintf("\r\n");
         iprintf("Inputs:  x=%5d   y=%5d   z=%5d ", accel_x(), accel_y(), accel_z());

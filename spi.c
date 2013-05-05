@@ -20,7 +20,7 @@ void spi_init(int cpol, int cphase, int rate)
     SIM_SCGC4 |= SIM_SCGC4_SPI0_MASK; //point clock to SPI
     
     SPI0_C1 |= SPI_C1_SPE_MASK; //enable SPI subsystem
-    SPI0_C1 |= SPI_C1_SPIE_MASK; //enable recieve buffer full interrupt
+    //SPI0_C1 |= SPI_C1_SPIE_MASK; //enable recieve buffer full interrupt
     SPI0_C1 |= SPI_C1_MSTR_MASK; //master mode
     SPI0_C1 &= ~SPI_C1_CPHA_MASK; //set clock phase to 0. it defaults to 1 on reset. 
     SPI0_C1 |= SPI_C1_SSOE_MASK; //slave select enable so SS pin is automatically asserted
@@ -39,19 +39,34 @@ void spi_init(int cpol, int cphase, int rate)
     SPI0_BR |= SPI_BR_SPPR(4);
     SPI0_BR |= SPI_BR_SPR(1);
             
-    enable_irq(INT_SPI0);
+    //enable_irq(INT_SPI0);
 }
 
 void spi_write_data(uint8_t byteIn)
 {
-    if(SPI0_S & SPI_S_SPTEF_MASK) {
-        SPI0_D = byteIn;
-    } else {
-        uart_write_err( WRITE_ERR, sizeof(WRITE_ERR));
-    }
+    volatile int readb; 
+    //while not empty
+    while(!(SPI0_S & SPI_S_SPTEF_MASK))
+        ;
+    //iprintf("done with first loop\r\n");
+    SPI0_D = byteIn;
+        
+
+    //    //wait while not empty
+    while(!(SPI0_S & SPI_S_SPTEF_MASK)) 
+        ;
+//    iprintf("done with second loop\r\n");
+//    
     
+    //wait while rx not full
+    while(!(SPI0_S & SPI_S_SPRF_MASK))
+        ;
+    readb = SPI0_D;
+    
+    iprintf("spi_write_data: %d\r\n", readb);
+
     //turn on rx interrupt
-    SPI0_C1 |= SPI_C1_SPIE_MASK;
+    //SPI0_C1 |= SPI_C1_SPIE_MASK;
 }
 
 void SPI0_IRQHandler() 

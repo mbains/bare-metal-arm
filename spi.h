@@ -17,6 +17,6 @@ void spi_init(int cpol, int cphase, int rate);
 void spi_write_data(uint8_t byteIn);
 
 void SPI0_IRQHandler() __attribute__((interrupt("IRQ")));
-
+uint8_t getSPIData();
 #endif	/* SPI_H */
 
