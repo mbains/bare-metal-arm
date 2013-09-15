@@ -18,7 +18,9 @@ LIBOBJS = _startup.o syscalls.o uart.o delay.o accel.o touch.o usb.o \
 
 INCLUDES = freedom.h common.h gpio.h spi.h
 
-all: demo.srec demo.dump
+all: demo.srec demo.dump 
+
+motion: m_monitor.srec demo.dump
 
 libbare.a: $(LIBOBJS)
 	$(AR) -rv libbare.a $(LIBOBJS)

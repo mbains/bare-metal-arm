@@ -67,9 +67,10 @@ inline uint32_t getPortD_IRQ_count(void) {
 
 void PORTD_IRQHandler() {
     totalPortD_irq+=1;
-
+    iprintf("PD5:%d\r\n",totalPortD_irq);
     //set the interrupt status flag to complete IRQ handle
-    PORTD_PCR0 |= (1 << PORT_PCR_ISF_SHIFT);
+    //TODO this handles only portd pin 5
+    PORTD_PCR5 |= (1 << PORT_PCR_ISF_SHIFT);
 
 }
 inline uint32_t getPortA_IRQ_count(void) {
@@ -78,7 +79,7 @@ inline uint32_t getPortA_IRQ_count(void) {
 
 void PORTA_IRQHandler() {
     totalPortA_irq+=1;
-    
+
     //set the interrupt status flag to complete IRQ handle
     PORTA_PCR0 |= (1 << PORT_PCR_ISF_SHIFT);
 }
