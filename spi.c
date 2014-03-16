@@ -1,5 +1,6 @@
 #include <freedom.h>
 #include "common.h"
+#include "spi.h"
 #include <stdio.h>
 
 #define WRITE_ERR "SPIWRITE_ERR\r\n"
@@ -7,6 +8,23 @@
 #define INTRQ   "SPI IRQ\r\n"
 
 volatile static int dataIn;
+
+static void spiSendData(uint8_t data);
+static uint8_t spiRecvData(void);
+
+static void spiSendData(uint8_t data) 
+{
+    //wait while not TX Empty
+    while(!(SPI0_S & SPI_S_SPTEF_MASK));
+    SPI0_D = data;
+}
+
+static uint8_t spiRecvData(void)
+{
+    //wait while rx not full
+    while(!(SPI0_S & SPI_S_SPRF_MASK));
+    return SPI0_D;
+}
 
 void spi_init(int cpol, int cphase, int rate) 
 {
@@ -42,7 +60,7 @@ void spi_init(int cpol, int cphase, int rate)
     //enable_irq(INT_SPI0);
 }
 
-void spi_write_data(uint8_t byteIn)
+void spi_write_test(uint8_t byteIn)
 {
     volatile int readb; 
     //while not empty
@@ -68,6 +86,26 @@ void spi_write_data(uint8_t byteIn)
     //turn on rx interrupt
     //SPI0_C1 |= SPI_C1_SPIE_MASK;
 }
+
+uint8_t spiReadWrite(uint8_t * rbuf, uint8_t * tbuf, int cnt)
+{
+    uint8_t i;
+    for(i = 0; i < cnt; i++) {
+        if(tbuf) {
+            spiSendData(*tbuf++);
+        } else {
+            spiSendData(0xff);
+        }
+        if(rbuf) {
+            *rbuf++ = spiRecvData();
+        } else {
+            //toss
+            (void)spiRecvData();
+        }
+    }
+    return i;
+}
+
 
 void SPI0_IRQHandler() 
 {
