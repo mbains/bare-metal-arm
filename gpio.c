@@ -69,7 +69,7 @@ void gpio_input_enable(FRDM_GPIO_PORT_T port, uint8_t pin, uint8_t irqc)
     //set the PCR MUX to GPIO alternative 1
     *(cdreg.pcr_ptr) |= PORT_PCR_MUX(FRDM_MUX_GPIO); 
     //set the direction register for input for this pin
-    *(cdreg.pddr_ptr) &= ~GPIO_PDDR_PDD(pin); 
+    *(cdreg.pddr_ptr) &= ~GPIO_PDDR_PDD(1 << pin); 
     
     
     //enable interrupts on pin if possible
@@ -83,8 +83,8 @@ void gpio_input_enable(FRDM_GPIO_PORT_T port, uint8_t pin, uint8_t irqc)
 void gpio_output_enable(FRDM_GPIO_PORT_T port, uint8_t pin)
 {
     CtrlDirRegisters_t cdreg = get_ctrl_dir_registers(port, pin);
-    *(cdreg.pcr_ptr) |= PORT_PCR_MUX(FRDM_MUX_GPIO); //select GPIO
-    *(cdreg.pddr_ptr) |= GPIO_PDDR_PDD(pin); //set direction output
+    *(cdreg.pcr_ptr) = PORT_PCR_MUX(FRDM_MUX_GPIO); //select GPIO
+    *(cdreg.pddr_ptr) |= GPIO_PDDR_PDD(1 << pin); //set direction output
 }
 
 inline uint32_t getPortD_IRQ_count(void) {
