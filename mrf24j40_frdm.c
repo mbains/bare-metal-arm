@@ -224,6 +224,9 @@ void mrf24j40_init() {
     mrf_driver.cs = 1; //PORTD_1
     mrf_driver.reset = 0; //PORTD_0
     
+    gpio_output_enable(FRDM_GPIO_PORT_D, mrf_driver.cs);
+    gpio_output_enable(FRDM_GPIO_PORT_D, mrf_driver.reset);
+    
     spi_init(0, 0, 0);
     FRDM_PORTD_CLEAR_PIN(mrf_driver.reset);
     delay(300);

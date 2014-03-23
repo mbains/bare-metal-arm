@@ -43,7 +43,7 @@ void spi_init(int cpol, int cphase, int rate)
     SPI0_C1 &= ~SPI_C1_CPHA_MASK; //set clock phase to 0. it defaults to 1 on reset. 
     SPI0_C1 |= SPI_C1_SSOE_MASK; //slave select enable so SS pin is automatically asserted
 
-    SPI0_C2 |= SPI_C2_MODFEN_MASK; //turn on MODFEN so SS pin is used for SPI slave select
+    //SPI0_C2 |= SPI_C2_MODFEN_MASK; //turn on MODFEN so SS pin is used for SPI slave select
     
     
     /*set the clock to max speed.
@@ -75,12 +75,12 @@ void spi_write_test(uint8_t byteIn)
         ;
 //    iprintf("done with second loop\r\n");
 //    
-    
+      
     //wait while rx not full
     while(!(SPI0_S & SPI_S_SPRF_MASK))
         ;
     readb = SPI0_D;
-    
+
     iprintf("spi_write_data: %d\r\n", readb);
 
     //turn on rx interrupt
