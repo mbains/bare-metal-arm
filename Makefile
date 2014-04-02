@@ -20,7 +20,9 @@ INCLUDES = freedom.h common.h gpio.h spi.h
 
 all: demo.srec demo.dump 
 
-motion: m_monitor.srec demo.dump
+motion: m_monitor.srec motion.dump
+	
+mrfwireless: wireless.srec wireless.dump
 	
 libbare.a: $(LIBOBJS)
 	$(AR) -rv libbare.a $(LIBOBJS)
