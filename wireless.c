@@ -35,27 +35,19 @@ int main(void)
     //gpio_input_enable(FRDM_GPIO_PORT_D, 0, FRDM_IRQC_FALLING_EDGE);
     //RGB_LED(0,100,0);                       // Green
 
-    // Welcome banner
-    iprintf("\r\n\r\n====== Freescale Freedom FRDM-LK25Z\r\n");
-    iprintf("Built: %s %s\r\n\r\n", __DATE__, __TIME__);
-    heap_end = _sbrk(0);
-    iprintf("Heap:  %p to %p (%d bytes used)\r\n", __heap_start, heap_end, 
-                heap_end - (char *)__heap_start);
-    iprintf("Stack: %p to %p (%d bytes used)\r\n", &i, __StackTop, 
-                (char *)__StackTop - &i);
-    iprintf("%d bytes free\r\n", &i - heap_end);
- 
-    
+
+   
     mrf24j40_init();
     mrf24j40_devinit();
     delay(100);
     mrf24j40_setpan(0xcafe);
     mrf24j40_setShortAddr(0x6000);
     for(;;) {
-        sprintf(tx_str, "%d %d", touch_data(9), touch_data(10));
-        iprintf("monitor> %s ", tx_str);
+        //sprintf(tx_str, "%d %d", touch_data(9), touch_data(10));
+        sprintf(tx_str, "%d,%d,%d,", accel_x(), accel_y(), accel_z()); 
+        iprintf("%s ", tx_str);
 
-        delay(300);
+        delay(30);
         mrf24j40_interrupt_handler();
         evt = mrf24j40_check_flags();
         if (evt & mrf_rxevent) {
