@@ -16,6 +16,7 @@
 int main(void)
 {
     char buf[COMMAND_SIZE+2]; //
+    char rx_byte[2];
     int idx;
     // Initialize all modules
     uart_init(9600);
@@ -37,6 +38,10 @@ int main(void)
   
     PTD_BASE_PTR->PSOR = 0xf;
     for(;;) {
+        fgets(&rx_byte, 2, stdin);
+        if(rx_byte != ';') {
+            continue;
+        }
         fgets(buf, COMMAND_SIZE+1, stdin);//fgets leaves room for null term
         
         //iprintf("%d, %d, %d, %d\r\n", buf[0], buf[1], buf[2], buf[3]);
