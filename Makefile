@@ -1,10 +1,10 @@
 
 
-GCCBIN = gcc-arm/bin
-CC = $(GCCBIN)/arm-none-eabi-gcc
-AR = $(GCCBIN)/arm-none-eabi-ar
-OBJCOPY = $(GCCBIN)/arm-none-eabi-objcopy
-OBJDUMP = $(GCCBIN)/arm-none-eabi-objdump
+#GCCBIN = gcc-arm/bin
+CC = arm-none-eabi-gcc
+AR = arm-none-eabi-ar
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
 
 DEBUG_OPTS = -g3 -gdwarf-2 -gstrict-dwarf
 OPTS = -Os
@@ -20,7 +20,7 @@ INCLUDES = freedom.h common.h gpio.h spi.h
 
 all: demo.srec demo.dump 
 
-motion: m_monitor.srec motion.dump
+motion: m_monitor.srec m_monitor.dump
 	
 mrfwireless: wireless.srec wireless.dump
 	
