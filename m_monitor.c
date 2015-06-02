@@ -16,6 +16,7 @@
 int main(void)
 {
     char buf[COMMAND_SIZE+2]; //
+    char sw_status[COMMAND_SIZE];
     char rx_byte[2];
     int idx;
     // Initialize all modules
@@ -38,8 +39,8 @@ int main(void)
   
     PTD_BASE_PTR->PSOR = 0xf;
     for(;;) {
-        fgets(&rx_byte, 2, stdin);
-        if(rx_byte != ';') {
+        fgets(rx_byte, 2, stdin);
+        if(rx_byte[0] != ';') {
             continue;
         }
         fgets(buf, COMMAND_SIZE+1, stdin);//fgets leaves room for null term
@@ -50,13 +51,19 @@ int main(void)
             switch(buf[idx]){
                 case '0':
                     PTD_BASE_PTR->PDOR &= ~(1 << idx);
+                    sw_status[idx] = '1';
                     break;
                 case '1':
                     PTD_BASE_PTR->PDOR |= (1 << idx);
+                    sw_status[idx] = '0';
                     break;
             }
         }
-        iprintf("qry:%d\r\n", (int) getPortD_IRQ_count());
+        iprintf("qry:%d,%d,%d,%d,%d\r\n", (int) getPortD_IRQ_count(), 
+                    sw_status[0],
+                    sw_status[1],
+                    sw_status[2],
+                    sw_status[3]);
 
     }
 }
